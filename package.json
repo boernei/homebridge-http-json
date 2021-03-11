@@ -1,29 +1,29 @@
 {
   "_args": [
     [
-      "homebridge-http-json",
+      "homebridge-http-resol-json-vbus",
       ""
     ],
     [
-      "homebridge-http-json",
+      "homebridge-http-resol-json-vbus",
       ""
     ]
   ],
-  "_from": "homebridge-http-json@*",
-  "_id": "homebridge-http-json@0.0.1",
+  "_from": "homebridge-http-resol-json-vbus@*",
+  "_id": "homebridge-http-resol-json-vbus@0.0.1",
   "_inCache": true,
   "_installable": true,
-  "_location": "/homebridge-http-json",
+  "_location": "/http-resol-json-vbus",
   "_nodeVersion": "5.1.1",
   "_npmUser": {
-    "email": "mail@nunoferro.com",
-    "name": "ferro"
+    "email": "mail@bernhardhering.de",
+    "name": "boernei"
   },
   "_npmVersion": "3.3.12",
   "_phantomChildren": {},
   "_requested": {
-    "name": "homebridge-http-json",
-    "raw": "homebridge-http-json",
+    "name": "homebridge-http-resol-json-vbus",
+    "raw": "homebridge-http-resol-json-vbus",
     "rawSpec": "",
     "scope": null,
     "spec": "*",
@@ -33,20 +33,20 @@
     "#USER"
   ],
   "_shrinkwrap": null,
-  "_spec": "homebridge-http-json",
+  "_spec": "homebridge-http-resol-json-vbus",
   "_where": "",
   "author": {
-    "email": "mail@nunoferro.com",
-    "name": "Nuno Ferro"
+    "email": "mail@bernhardhering.de",
+    "name": "boernei"
   },
   "bugs": {
-    "url": "https://github.com/nferro/homebridge-http-json/issues"
+    "url": "https://github.com/boernei/homebridge-http-json/issues"
   },
   "dependencies": {
     "fakegato-history": "^0.6.1",
     "superagent": "^1.6.1"
   },
-  "description": "homebridge-http-json",
+  "description": "homebridge-http-resol-json-vbus",
   "devDependencies": {},
   "directories": {},
   "dist": {
@@ -57,7 +57,7 @@
     "homebridge": ">=0.2.0",
     "node": ">=0.12.0"
   },
-  "homepage": "https://github.com/nferro/homebridge-http-json",
+  "homepage": "https://github.com/boernei/homebridge-http-json",
   "keywords": [
     "homebridge-plugin"
   ],
@@ -65,16 +65,16 @@
   "main": "index.js",
   "maintainers": [
     {
-      "name": "Nuno Ferro",
-      "email": "mail@nunoferro.com"
+      "email": "mail@bernhardhering.de",
+      "name": "boernei"
     }
   ],
-  "name": "homebridge-http-json",
+  "name": "homebridge-http-resol-json-vbus",
   "optionalDependencies": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nferro/homebridge-http-json.git"
+    "url": "git+https://github.com/boernei/homebridge-http-json.git"
   },
   "scripts": {},
-  "version": "0.0.6"
+  "version": "0.0.1"
 }

@@ -1,4 +1,4 @@
-# homebridge-http-json
+# homebridge-http-resol-json-vbus
 
 Simple HTTP JSON client for [Homebridge HomeKit](https://github.com/nfarina/homebridge).
 

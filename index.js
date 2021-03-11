@@ -5,7 +5,7 @@ module.exports = function (homebridge) {
     Service = homebridge.hap.Service;
     Characteristic = homebridge.hap.Characteristic;
     console.log("Hallo")
-    homebridge.registerAccessory("homebridge-http-json", "http-json", HttpAccessory);
+    homebridge.registerAccessory("homebridge-http-resol-json-vbus", "http-resol-json-vbus", HttpAccessory);
 }
 
 function HttpAccessory(log, config) {
@@ -21,7 +21,7 @@ function HttpAccessory(log, config) {
 }
 
 HttpAccessory.prototype = {
-    
+
     getServices: function () {
         this.log("getServices")
         var informationService = new Service.AccessoryInformation();
