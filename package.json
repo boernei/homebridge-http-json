@@ -43,6 +43,7 @@
     "url": "https://github.com/nferro/homebridge-http-json/issues"
   },
   "dependencies": {
+    "fakegato-history": "^0.6.1",
     "superagent": "^1.6.1"
   },
   "description": "homebridge-http-json",
