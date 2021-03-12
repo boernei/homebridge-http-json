@@ -1,20 +1,86 @@
-{
-	"accessory": "http-resol-json-vbus",
-	"service": "Thermostat",
-	"name": "ESP Sala",
-	"url": "http://192.168.1.85/readings",
-	"sensors" : [
-		{
-			"name": "Temperature",
-			"service": "TemperatureSensor",
-			"caractheristic": "CurrentTemperature",
-			"field": "temperature"
-		},
-		{
-			"name": "Humidity",
-			"service": "HumiditySensor",
-			"caractheristic": "CurrentRelativeHumidity",
-			"field": "humidity"
-		}
-	]
-}
+[
+  {
+    "accessory": "http-resol-json-vbus",
+    "name": "Solar Thermie Kollektor und Pumpe",
+    "service": "Thermostat",
+    "url": "http://192.168.0.44:3333/api/v1/live-data/",
+    "sensors": [
+      {
+        "name": "Temperatur Kollektor",
+        "service": "TemperatureSensor",
+        "caractheristic": "CurrentTemperature",
+        "field": "Temperature sensor 1"
+      }
+    ]
+  },
+  {
+    "accessory": "http-resol-json-vbus",
+    "name": "Solar Thermie Pumpe",
+    "service": "Thermostat",
+    "url": "http://192.168.0.44:3333/api/v1/live-data/",
+    "sensors": [
+      {
+        "name": "Solarpumpe",
+        "service": "HumiditySensor",
+        "caractheristic": "CurrentRelativeHumidity",
+        "field": "Pump speed relay 1"
+      }
+    ]
+  },
+  {
+    "accessory": "http-resol-json-vbus",
+    "name": "Solar Thermie Mischer",
+    "service": "Thermostat",
+    "url": "http://192.168.0.44:3333/api/v1/live-data/",
+    "sensors": [
+      {
+        "name": "Solarmischer",
+        "service": "HumiditySensor",
+        "caractheristic": "CurrentRelativeHumidity",
+        "field": "Pump speed relay 2"
+      }
+    ]
+  },
+  {
+    "accessory": "http-resol-json-vbus",
+    "name": "Solar Thermie Puffer oben und Mischer",
+    "service": "Thermostat",
+    "url": "http://192.168.0.44:3333/api/v1/live-data/",
+    "sensors": [
+      {
+        "name": "Resol Puffer oben",
+        "service": "TemperatureSensor",
+        "caractheristic": "CurrentTemperature",
+        "field": "Temperature sensor 2"
+      }
+    ]
+  },
+  {
+    "accessory": "http-resol-json-vbus",
+    "name": "Solar Thermie Puffer mitte",
+    "service": "Thermostat",
+    "url": "http://192.168.0.44:3333/api/v1/live-data/",
+    "sensors": [
+      {
+        "name": "Resol Puffer mitte",
+        "service": "TemperatureSensor",
+        "caractheristic": "CurrentTemperature",
+        "field": "Temperature sensor 3"
+      }
+    ]
+  },
+  {
+    "accessory": "http-resol-json-vbus",
+    "name": "Solar Thermie Puffer unten",
+    "service": "Thermostat",
+    "url": "http://192.168.0.44:3333/api/v1/live-data/",
+    "sensors": [
+      {
+        "name": "Resol Puffer unten",
+        "service": "TemperatureSensor",
+        "caractheristic": "CurrentTemperature",
+        "field": "Temperature sensor 4"
+      }
+    ]
+  }
+]
