@@ -35,52 +35,54 @@ HttpAccessory.prototype = {
             let sensor = this.sensors[i];
             let url = this.url;
             this.log("Setting up: " + sensor.name);
+            var temperatureService = new Service[sensor.service](sensor.name);
 
-            this.temperatureService = new Service[sensor.service](sensor.name);
+            temperatureService.log = this.log;
 
-            this.temperatureService.log = this.log;
-
-            var loggingService = new FakeGatoHistoryService('room', this.temperatureService, {
+            var loggingService = new FakeGatoHistor yService('room', temperatureService, {
                 size: 360 * 24 * 6,
                 storage: 'fs'
             });
 
-            this.temperatureService.getCharacteristic(Characteristic[sensor.caractheristic])
+            temperatureService.getCharacteristic(Characteristic[sensor.caractheristic])
                 .setProps({minValue: -10, maxValue: 100, minStep: 0.1})
-                .on('get', this.getState.bind(this, loggingService, url, sensor.service, sensor.field));
+                .on('get', this.getState.bind(this,temperatureService, loggingService, url, sensor.service, sensor.field));
 
             this.services.push(loggingService);
-            this.services.push(this.temperatureService);
+            this.services.push(temperatureService);
 
-            this.timer_temp = setInterval(this.updateState.bind(this, loggingService, url, sensor.service, sensor.field), 1 * 6000);
+            this.timer_temp = setInterval(this.updateState.bind(this, temperatureService, loggingService, url, sensor.service, sensor.field), 1 * 60000);
         }
 
         return this.services;
     },
-    getState: function (loggingService, url, servicetype, sensorfield, callback) {
+    getState: function (service, loggingService, url, servicetype, sensorfield, callback) {
 
         superagent.get(url).end(function (err, res) {
-            res.body.forEach(function (element) {
-                if (element["name"] == sensorfield) {
-                    var reading = element["rawValue"];
-                    //this.addHistoryCallback(loggingService, servicetype,sensorfield, reading);
-                    callback(loggingService, servicetype,sensorfield, reading)
-                }
-            });
+            if (res != null) {
+                res.body.forEach(function (element) {
+                    if (element["name"] == sensorfield) {
+                        var reading = element["rawValue"];
+                        //this.addHistoryCallback(loggingService, servicetype,sensorfield, reading);
+                        callback(service, loggingService, servicetype,sensorfield, reading)
+                    }
+                });
+            }
         });
     },
-    updateState: function (loggingService, url, servicetype, sensorfield, callback) {
+    updateState: function (service, loggingService, url, servicetype, sensorfield, callback) {
 
-        this.getState(loggingService, url,servicetype, sensorfield , addHistoryCallback)
+        this.getState(service,loggingService, url,servicetype, sensorfield , addHistoryCallback)
     },
 
 };
 
-addHistoryCallback = function(loggingService, servicetype,sensorfield, reading) {
+addHistoryCallback = function(service, loggingService, servicetype,sensorfield, reading) {
     //if (err) return console.error(err);
 
 
-    if (servicetype == "Temperature") {
+    if (servicetype == "TemperatureSensor") {
+        service.getCharacteristic(Characteristic.CurrentTemperature).updateValue(reading, null);
         loggingService.addEntry({
             time: Math.round(new Date().valueOf() / 1000),
             temp: reading,
@@ -88,6 +90,7 @@ addHistoryCallback = function(loggingService, servicetype,sensorfield, reading) 
             ppm: 0
         })
     } else {
+        service.getCharacteristic(Characteristic.CurrentRelativeHumidity).updateValue(reading, null);
         loggingService.addEntry({
             time: Math.round(new Date().valueOf() / 1000),
             temp: 0,
