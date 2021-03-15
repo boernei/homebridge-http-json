@@ -1,6 +1,6 @@
+var fs = require('fs');
 var Service, Characteristic, FakeGatoHistoryService;
 var superagent = require('superagent');
-
 
 module.exports = function (homebridge) {
     Service = homebridge.hap.Service;
@@ -15,19 +15,22 @@ function HttpAccessory(log, config) {
     this.service = config["service"];
     this.name = config["name"];
     this.sensors = config["sensors"];
+    this.deviceType = config["service"] || this.accessory;
     this.services = [];
 }
 
 HttpAccessory.prototype = {
-
+    identify: function(callback) {
+        this.log("Identify requested!");
+        callback(); // success
+    },
     getServices: function () {
         var informationService = new Service.AccessoryInformation();
 
         informationService
             .setCharacteristic(Characteristic.Manufacturer, "Bernhard Hering")
-            .setCharacteristic(Characteristic.Model, "HTTP Resol")
-            .setCharacteristic(Characteristic.SerialNumber, "ACME#1")
-
+            .setCharacteristic(Characteristic.Model, this.deviceType)
+            .setCharacteristic(Characteristic.SerialNumber, this.name)
 
         this.services.push(informationService);
 
@@ -39,7 +42,7 @@ HttpAccessory.prototype = {
 
             temperatureService.log = this.log;
 
-            var loggingService = new FakeGatoHistor yService('room', temperatureService, {
+            var loggingService = new FakeGatoHistoryService('room', temperatureService, {
                 size: 360 * 24 * 6,
                 storage: 'fs'
             });
@@ -56,7 +59,7 @@ HttpAccessory.prototype = {
 
         return this.services;
     },
-    getState: function (service, loggingService, url, servicetype, sensorfield, callback) {
+    getState: function (service, loggingService, url, servicetype, sensorfield, callback, cbk) {
 
         superagent.get(url).end(function (err, res) {
             if (res != null) {
@@ -65,6 +68,8 @@ HttpAccessory.prototype = {
                         var reading = element["rawValue"];
                         //this.addHistoryCallback(loggingService, servicetype,sensorfield, reading);
                         callback(service, loggingService, servicetype,sensorfield, reading)
+                        cbk(null, reading)
+                        return reading
                     }
                 });
             }
@@ -76,6 +81,8 @@ HttpAccessory.prototype = {
     },
 
 };
+
+
 
 addHistoryCallback = function(service, loggingService, servicetype,sensorfield, reading) {
     //if (err) return console.error(err);
