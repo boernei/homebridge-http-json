@@ -10,7 +10,7 @@
     ]
   ],
   "_from": "homebridge-http-resol-json-vbus@*",
-  "_id": "homebridge-http-resol-json-vbus@0.1.1",
+  "_id": "homebridge-http-resol-json-vbus@0.1.2s",
   "_inCache": true,
   "_installable": true,
   "_location": "/http-resol-json-vbus",
@@ -72,5 +72,5 @@
     "url": "git+https://github.com/boernei/homebridge-http-resol-json-vbus.git"
   },
   "scripts": {},
-  "version": "0.1.1"
+  "version": "0.1.2"
 }
