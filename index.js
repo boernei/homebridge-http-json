@@ -78,9 +78,7 @@ HttpAccessory.prototype = {
 };
 
 addHistoryCallback = function(err, loggingService, servicetype, temp) {
-    console.log("addHistoryCallback " + temp)
     if (err) return console.error(err);
-    console.log(self)
     if (servicetype == Temperature) {
         loggingService.addEntry({
             time: Math.round(new Date().valueOf() / 1000),
