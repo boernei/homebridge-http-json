@@ -21,7 +21,6 @@ function HttpAccessory(log, config) {
 HttpAccessory.prototype = {
 
     getServices: function () {
-        this.log("getServices")
         var informationService = new Service.AccessoryInformation();
 
         informationService
@@ -41,45 +40,47 @@ HttpAccessory.prototype = {
 
             this.temperatureService.log = this.log;
 
-
-            sensor.loggingService = new FakeGatoHistoryService('room', this, {
+            var loggingService = new FakeGatoHistoryService('room', this.temperatureService, {
                 size: 360 * 24 * 6,
                 storage: 'fs'
             });
 
             this.temperatureService.getCharacteristic(Characteristic[sensor.caractheristic])
                 .setProps({minValue: -10, maxValue: 100, minStep: 0.1})
-                .on('get', this.getState.bind(this, sensor.loggingService, url, sensor.service, sensor.field));
+                .on('get', this.getState.bind(this, loggingService, url, sensor.service, sensor.field));
 
-            this.services.push(sensor.loggingService);
+            this.services.push(loggingService);
             this.services.push(this.temperatureService);
 
-            this.timer_temp = setInterval(this.updateState.bind(this, sensor.loggingService, url, sensor.service, sensor.field), 1 * 60000);
+            this.timer_temp = setInterval(this.updateState.bind(this, loggingService, url, sensor.service, sensor.field), 1 * 6000);
         }
 
         return this.services;
     },
     getState: function (loggingService, url, servicetype, sensorfield, callback) {
+
         superagent.get(url).end(function (err, res) {
-            console.log(err)
             res.body.forEach(function (element) {
                 if (element["name"] == sensorfield) {
                     var reading = element["rawValue"];
-                    this.addHistoryCallback(this, null, loggingService, servicetype, reading);
-                    callback(null, reading)
+                    //this.addHistoryCallback(loggingService, servicetype,sensorfield, reading);
+                    callback(loggingService, servicetype,sensorfield, reading)
                 }
             });
         });
     },
-    updateState: function (loggingService, url, sensorfield, servicetype, callback) {
-        this.getState(this, url, loggingService, sensorfield, servicetype, addHistoryCallback)
+    updateState: function (loggingService, url, servicetype, sensorfield, callback) {
+
+        this.getState(loggingService, url,servicetype, sensorfield , addHistoryCallback)
     },
 
 };
 
-addHistoryCallback = function(err, loggingService, servicetype, temp) {
-    if (err) return console.error(err);
-    if (servicetype == Temperature) {
+addHistoryCallback = function(loggingService, servicetype,sensorfield, reading) {
+    //if (err) return console.error(err);
+
+
+    if (servicetype == "Temperature") {
         loggingService.addEntry({
             time: Math.round(new Date().valueOf() / 1000),
             temp: reading,
