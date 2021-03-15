@@ -1,8 +1,6 @@
 var Service, Characteristic, FakeGatoHistoryService;
 var superagent = require('superagent');
 
-var temperatureService;
-var humidityService;
 
 module.exports = function (homebridge) {
     Service = homebridge.hap.Service;
@@ -18,10 +16,6 @@ function HttpAccessory(log, config) {
     this.name = config["name"];
     this.sensors = config["sensors"];
     this.services = [];
-    this.loggingService = new FakeGatoHistoryService('room', this, {
-        size: this.log_days * 24 * 6,
-        storage: 'fs'
-    });
 }
 
 HttpAccessory.prototype = {
@@ -35,7 +29,6 @@ HttpAccessory.prototype = {
             .setCharacteristic(Characteristic.Model, "HTTP Resol")
             .setCharacteristic(Characteristic.SerialNumber, "ACME#1")
 
-        //if (this.service == "Thermostat") {
 
         this.services.push(informationService);
 
@@ -48,43 +41,60 @@ HttpAccessory.prototype = {
 
             this.temperatureService.log = this.log;
 
+
+            sensor.loggingService = new FakeGatoHistoryService('room', this, {
+                size: 360 * 24 * 6,
+                storage: 'fs'
+            });
+
             this.temperatureService.getCharacteristic(Characteristic[sensor.caractheristic])
                 .setProps({minValue: -10, maxValue: 100, minStep: 0.1})
-                .on('get', this.getState.bind(this, this.url, sensor.field));
+                .on('get', this.getState.bind(this, sensor.loggingService, url, sensor.service, sensor.field));
 
-            this.services.push(this.loggingService);
+            this.services.push(sensor.loggingService);
             this.services.push(this.temperatureService);
 
-            this.timer_temp = setInterval(this.updateState.bind(this, url, sensor.field), 1 * 60000);
+            this.timer_temp = setInterval(this.updateState.bind(this, sensor.loggingService, url, sensor.service, sensor.field), 1 * 60000);
         }
-        self = this
+
         return this.services;
-        // }
     },
-    getState: function(url, sensorfield, callback) {
+    getState: function (loggingService, url, servicetype, sensorfield, callback) {
         superagent.get(url).end(function (err, res) {
+            console.log(err)
             res.body.forEach(function (element) {
                 if (element["name"] == sensorfield) {
-                    var reading = element["rawValue"]
-                    self.loggingService.addEntry({
-                        time: Math.round(new Date().valueOf() / 1000),
-                        temp: reading,
-                        humidity: 50,
-                        ppm: 0
-                    })
-                    callback(null, reading);
+                    var reading = element["rawValue"];
+                    this.addHistoryCallback(this, null, loggingService, servicetype, reading);
+                    callback(null, reading)
                 }
             });
         });
     },
-    addHistoryCallback: function (err, temp) {
-        console.log("addHistoryCallback " + temp)
-        if (err) return console.error(err);
-        self.loggingService.addEntry({time: Math.round(new Date().valueOf() / 1000), temp: temp, humidity: 50, ppm: 0})
-    },
-    updateState:  function (url, sensorfield, callback) {
-        self.getState(url, sensorfield, this.addHistoryCallback)
+    updateState: function (loggingService, url, sensorfield, servicetype, callback) {
+        this.getState(this, url, loggingService, sensorfield, servicetype, addHistoryCallback)
     },
 
 };
+
+addHistoryCallback = function(err, loggingService, servicetype, temp) {
+    console.log("addHistoryCallback " + temp)
+    if (err) return console.error(err);
+    console.log(self)
+    if (servicetype == Temperature) {
+        loggingService.addEntry({
+            time: Math.round(new Date().valueOf() / 1000),
+            temp: reading,
+            humidity: 0,
+            ppm: 0
+        })
+    } else {
+        loggingService.addEntry({
+            time: Math.round(new Date().valueOf() / 1000),
+            temp: 0,
+            humidity: reading,
+            ppm: 0
+        })
+    }
+}
 
