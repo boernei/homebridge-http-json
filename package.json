@@ -40,7 +40,7 @@
     "name": "boernei"
   },
   "bugs": {
-    "url": "https://github.com/boernei/homebridge-http-json/issues"
+    "url": "https://github.com/boernei/homebridge-http-resol-json-vbus/issues"
   },
   "dependencies": {
     "fakegato-history": "^0.6.1",
@@ -49,15 +49,11 @@
   "description": "homebridge-http-resol-json-vbus",
   "devDependencies": {},
   "directories": {},
-  "dist": {
-    "shasum": "678b28836725baefa1f318dfb24436d50f112c96",
-    "tarball": "http://registry.npmjs.org/homebridge-http-json/-/homebridge-http-json-0.0.3.tgz"
-  },
   "engines": {
     "homebridge": ">=0.2.0",
     "node": ">=0.12.0"
   },
-  "homepage": "https://github.com/boernei/homebridge-http-json",
+  "homepage": "https://github.com/boernei/homebridge-http-resol-json-vbus",
   "keywords": [
     "homebridge-plugin"
   ],
@@ -73,7 +69,7 @@
   "optionalDependencies": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/boernei/homebridge-http-json.git"
+    "url": "git+https://github.com/boernei/homebridge-http-resol-json-vbus.git"
   },
   "scripts": {},
   "version": "0.1.0"
