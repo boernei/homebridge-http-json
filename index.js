@@ -59,17 +59,14 @@ HttpAccessory.prototype = {
 
         return this.services;
     },
-    getState: function (service, loggingService, url, servicetype, sensorfield, callback, cbk) {
+    getState: function (service, loggingService, url, servicetype, sensorfield, callback) {
 
         superagent.get(url).end(function (err, res) {
             if (res != null) {
                 res.body.forEach(function (element) {
                     if (element["name"] == sensorfield) {
                         var reading = element["rawValue"];
-                        //this.addHistoryCallback(loggingService, servicetype,sensorfield, reading);
                         callback(service, loggingService, servicetype,sensorfield, reading)
-                        cbk(null, reading)
-                        return reading
                     }
                 });
             }
@@ -87,8 +84,8 @@ HttpAccessory.prototype = {
 addHistoryCallback = function(service, loggingService, servicetype,sensorfield, reading) {
     //if (err) return console.error(err);
 
-
     if (servicetype == "TemperatureSensor") {
+        console.log("update service");
         service.getCharacteristic(Characteristic.CurrentTemperature).updateValue(reading, null);
         loggingService.addEntry({
             time: Math.round(new Date().valueOf() / 1000),
