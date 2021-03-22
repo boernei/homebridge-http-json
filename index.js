@@ -73,6 +73,7 @@ HttpAccessory.prototype = {
                         }
 
                         callback(service, loggingService, servicetype,sensorfield, reading)
+                        return reading
                     }
                 });
             }
