@@ -60,12 +60,18 @@ HttpAccessory.prototype = {
         return this.services;
     },
     getState: function (service, loggingService, url, servicetype, sensorfield, callback) {
-
         superagent.get(url).end(function (err, res) {
             if (res != null) {
                 res.body.forEach(function (element) {
                     if (element["name"] == sensorfield) {
                         var reading = element["rawValue"];
+
+                        if (servicetype == "TemperatureSensor") {
+                            service.getCharacteristic(Characteristic.CurrentTemperature).updateValue(reading, null);
+                        } else {
+                            service.getCharacteristic(Characteristic.CurrentRelativeHumidity).updateValue(reading, null);
+                        }
+
                         callback(service, loggingService, servicetype,sensorfield, reading)
                     }
                 });
@@ -73,7 +79,6 @@ HttpAccessory.prototype = {
         });
     },
     updateState: function (service, loggingService, url, servicetype, sensorfield, callback) {
-
         this.getState(service,loggingService, url,servicetype, sensorfield , addHistoryCallback)
     },
 
@@ -83,10 +88,7 @@ HttpAccessory.prototype = {
 
 addHistoryCallback = function(service, loggingService, servicetype,sensorfield, reading) {
     //if (err) return console.error(err);
-
     if (servicetype == "TemperatureSensor") {
-        console.log("update service");
-        service.getCharacteristic(Characteristic.CurrentTemperature).updateValue(reading, null);
         loggingService.addEntry({
             time: Math.round(new Date().valueOf() / 1000),
             temp: reading,
@@ -94,7 +96,6 @@ addHistoryCallback = function(service, loggingService, servicetype,sensorfield, 
             ppm: 0
         })
     } else {
-        service.getCharacteristic(Characteristic.CurrentRelativeHumidity).updateValue(reading, null);
         loggingService.addEntry({
             time: Math.round(new Date().valueOf() / 1000),
             temp: 0,
