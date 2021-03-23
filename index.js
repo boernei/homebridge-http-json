@@ -83,7 +83,9 @@ HttpAccessory.prototype = {
                                 ppm: 0
                             })
                         }
-                        callback(null, reading);
+                        if (typeof callback == 'function') {
+                            callback(null, reading);
+                        }
                         return reading
                     }
                 });
