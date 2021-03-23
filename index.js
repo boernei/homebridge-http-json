@@ -54,7 +54,7 @@ HttpAccessory.prototype = {
             this.services.push(loggingService);
             this.services.push(temperatureService);
 
-            this.timer_temp = setInterval(this.updateState.bind(this, temperatureService, loggingService, url, sensor.service, sensor.field), 1 * 60000);
+            this.timer_temp = setInterval(this.getState.bind(this, temperatureService, loggingService, url, sensor.service, sensor.field), 1 * 60000);
         }
 
         return this.services;
@@ -68,41 +68,27 @@ HttpAccessory.prototype = {
 
                         if (servicetype == "TemperatureSensor") {
                             service.getCharacteristic(Characteristic.CurrentTemperature).updateValue(reading, null);
+                            loggingService.addEntry({
+                                time: Math.round(new Date().valueOf() / 1000),
+                                temp: reading,
+                                humidity: 0,
+                                ppm: 0
+                            })
                         } else {
                             service.getCharacteristic(Characteristic.CurrentRelativeHumidity).updateValue(reading, null);
+                            loggingService.addEntry({
+                                time: Math.round(new Date().valueOf() / 1000),
+                                temp: 0,
+                                humidity: reading,
+                                ppm: 0
+                            })
                         }
-
-                        callback(service, loggingService, servicetype,sensorfield, reading)
+                        callback(null, reading);
                         return reading
                     }
                 });
             }
         });
-    },
-    updateState: function (service, loggingService, url, servicetype, sensorfield, callback) {
-        this.getState(service,loggingService, url,servicetype, sensorfield , addHistoryCallback)
-    },
-
-};
-
-
-
-addHistoryCallback = function(service, loggingService, servicetype,sensorfield, reading) {
-    //if (err) return console.error(err);
-    if (servicetype == "TemperatureSensor") {
-        loggingService.addEntry({
-            time: Math.round(new Date().valueOf() / 1000),
-            temp: reading,
-            humidity: 0,
-            ppm: 0
-        })
-    } else {
-        loggingService.addEntry({
-            time: Math.round(new Date().valueOf() / 1000),
-            temp: 0,
-            humidity: reading,
-            ppm: 0
-        })
     }
-}
+};
 
